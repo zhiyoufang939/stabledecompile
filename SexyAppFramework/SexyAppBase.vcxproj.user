@@ -9,6 +9,7 @@
     <LocalDebuggerCommandArguments>-tod</LocalDebuggerCommandArguments>
     <LocalDebuggerWorkingDirectory>$(SolutionDir)build\$(Configuration)_$(Platform)\bin\</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerCommandArgumentsHistory>-tod|</LocalDebuggerCommandArgumentsHistory>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugGOTY|Win32'">
     <LocalDebuggerCommandArguments>-tod</LocalDebuggerCommandArguments>
