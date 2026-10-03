@@ -51,6 +51,11 @@ void PlayerInfo::SyncDetails(DataSync& theSync)
 
 	SafeSync(theSync.SyncLong(mLevel));
 	SafeSync(theSync.SyncLong(mCoins));
+	if (theSync.GetReader())
+	{
+		// Stored coin units are displayed at 10 times their value.
+		mCoins = 1000000;
+	}
 	SafeSync(theSync.SyncLong(mFinishedAdventure));
 	for (int i = 0; i < 100; i++)
 	{
@@ -165,7 +170,8 @@ void PlayerInfo::DeleteUserFiles()
 void PlayerInfo::Reset()
 {
 	mLevel = 1;
-	mCoins = 0;
+	// Stored coin units are displayed at 10 times their value.
+	mCoins = 1000000;
 	mFinishedAdventure = 0;
 	memset(mChallengeRecords, 0, sizeof(mChallengeRecords));
 	memset(mPurchases, 0, sizeof(mPurchases));

@@ -31,3 +31,54 @@
 | 命中特效 | `Lawn/Projectile.cpp` | `Projectile::DoImpact -> PARTICLE_PEA_SPLAT` |
 
 `Plant::Update -> UpdateShooter -> FindTargetAndFire -> anim_shooting + mShootingCounter -> UpdateShooting -> Fire -> Board::AddProjectile -> Projectile::Update/UpdateNormalMotion -> Projectile::Draw/DoImpact`
+
+## 新增全新植物
+
+| 内容 | 文件 | 枚举 / 函数 / 参数 |
+|---|---|---|
+| SeedType 定义 | `ConstEnums.h` | `SeedType`; `NUM_SEED_TYPES`; `NUM_SEEDS_IN_CHOOSER` |
+| PlantDefinition 注册 | `Lawn/Plant.h`; `Lawn/Plant.cpp` | `PlantDefinition`; `gPlantDefs`; `GetPlantDefinition` |
+| Reanimation 注册 | `ConstEnums.h`; `Sexy.TodLib/Reanimator.cpp` | `ReanimationType`; `NUM_REANIMS`; `gLawnReanimationArray` |
+| 植物创建 / 生命周期 | `Lawn/Board.cpp`; `Lawn/Plant.cpp` | `Board::NewPlant`; `Board::AddPlant`; `PlantInitialize`; `Update`; `Draw` |
+| 植物行为入口 | `Lawn/Plant.cpp` | `Plant::Update`; `PlantInitialize`; `DoSpecial`; SeedType 分派与分类函数 |
+| 攻击逻辑 | `Lawn/Plant.cpp` | `SUBCLASS_SHOOTER`; `UpdateShooter`; `FindTargetAndFire`; `Fire` |
+| 卡片 / Seed Packet | `Lawn/SeedPacket.cpp`; `Lawn/System/ReanimationLawn.cpp` | `DrawSeedPacket`; `SeedPacket::SetPacketType`; `Plant::DrawSeedType`; `mPlantImages[NUM_SEED_TYPES]` |
+| 选卡界面 / 解锁 | `Lawn/Widget/SeedChooserScreen.cpp`; `LawnApp.cpp` | `mChosenSeeds[NUM_SEED_TYPES]`; `NUM_SEEDS_IN_CHOOSER`; `HasSeedType`; `SeedTypeAvailable` |
+| 图鉴 | `Lawn/Widget/AlmanacDialog.h`; `Lawn/Widget/AlmanacDialog.cpp` | `NUM_ALMANAC_SEEDS`; `DrawPlants`; `GetSeedPosition` |
+| 名称 / 提示 / 描述 | `Lawn/Plant.cpp`; `assets/extension/properties/LawnStrings.txt` | `mPlantName`; `[ID]`; `[ID_TOOLTIP]`; `[ID_DESCRIPTION]` |
+| Projectile | `ConstEnums.h`; `Lawn/Projectile.h`; `Lawn/Projectile.cpp`; `Lawn/Plant.cpp` | `ProjectileType`; `gProjectileDefinition`; `ProjectileInitialize`; `UpdateMotion`; `Draw`; `Plant::Fire` |
+| Reanimation / 图片资源 | `assets/extension/reanim/`; `assets/extension/compiled/reanim/` | `.reanim`; `.reanim.compiled`; Reanimation 引用的 PNG |
+| ResourceManifest | `assets/extension/properties/resources.xml`; `Resources.h`; `Resources.cpp` | 独立图片 / 声音资源 ID；源码全局资源变量及加载表 |
+| NUM_SEED_TYPES 相关数组 | `Lawn/Plant.cpp`; `Lawn/SeedPacket.cpp`; `Lawn/System/ReanimationLawn.h`; `Lawn/Widget/SeedChooserScreen.h` | `gPlantDefs`; 权重数组；`mPlantImages`; `mChosenSeeds` |
+| 存档 / 枚举兼容 | `Lawn/System/PlayerInfo.h`; `Lawn/System/PlayerInfo.cpp`; `Lawn/System/SaveGame.cpp` | `mPlantedPlants[SEED_LEFTPEATER]`; `SyncDetails`; `SyncBoard`；保留已有 SeedType 数值 |
+| 解锁 / 关卡植物列表 | `LawnApp.cpp`; `Lawn/Board.cpp`; `Lawn/CutScene.cpp`; `Lawn/Challenge.cpp` | `GetAwardSeedForLevel`; `GetSeedsAvailable`; `HasSeedType`; 各模式固定植物列表 |
+
+SeedType
+→ NUM_SEED_TYPES / 固定边界审计
+→ gPlantDefs
+→ ReanimationType / 资源
+→ PlantInitialize
+→ Update / 特殊行为
+→ Fire / Projectile（攻击植物）
+→ Draw / SeedPacket
+→ SeedChooser / 解锁
+→ Almanac / LawnStrings
+→ SaveGame / PlayerInfo 兼容检查
+
+| 新植物基础表项 | `Lawn/Plant.cpp` | `gPlantDefs[new SeedType]`；索引必须与 `SeedType` 数值严格一致 |
+| 新植物行为初始化 | `Lawn/Plant.cpp` | `Plant::PlantInitialize`；特殊植物按 `SeedType` 增加初始化 |
+| 新植物特殊 Update | `Lawn/Plant.cpp` | `Plant::Update` / `DoSpecial`；普通植物可复用默认流程 |
+| 新射手 Fire 分派 | `Lawn/Plant.cpp` | `Plant::Fire`；新的攻击型 `SeedType` 通常必须增加 Projectile 映射 |
+| 枪口 / 攻击范围 | `Lawn/Plant.cpp` | `GetPlantAttackRect`; 发射坐标相关函数 |
+| 正常选卡数量边界 | `ConstEnums.h`; `SeedChooserScreen.cpp` | `NUM_SEEDS_IN_CHOOSER`；不能直接等于 `NUM_SEED_TYPES` |
+| 模仿者植物范围 | `Lawn/Widget/ImitaterDialog.cpp` | 固定 SeedType 范围；新植物不会自动加入 |
+| 图鉴植物数量 | `AlmanacDialog.h/.cpp` | `NUM_ALMANAC_SEEDS`；高编号植物不会自动正确布局 |
+| Adventure 解锁 | `LawnApp.cpp` | `GetAwardSeedForLevel`; `GetSeedsAvailable`; `HasSeedType` |
+| 存档固定植物数组 | `PlayerInfo.h/.cpp` | `mPlantedPlants[...]`；修改范围可能影响存档格式 |
+| SeedType 存档兼容 | `ConstEnums.h`; `SaveGame.cpp` | 旧枚举值不可重新排序；新增类型应避免插入旧枚举之间 |
+
+## 玩家金币
+
+| 内容 | 文件 | 参数 / 说明 |
+|---|---|---|
+| 玩家金币设为 10000000 | `Lawn/System/PlayerInfo.cpp` | `PlayerInfo::SyncDetails` 在读取存档后将 `mCoins` 设为 `1000000`；`PlayerInfo::Reset` 同步设置新档案初始值。`LawnApp::GetMoneyString` 按内部值的 10 倍显示，因此游戏内显示为 `10000000` |

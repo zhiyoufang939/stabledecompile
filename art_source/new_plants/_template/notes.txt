@@ -1,0 +1,38 @@
+中文名称：
+英文 plant_id：
+阳光价格：
+冷却时间：
+攻击伤害：
+攻击间隔：
+发射帧：
+枪口坐标：
+是否复用原版豌豆：是
+
+动画备注：
+- idle 是否仅提供单张图片：
+- shoot 总帧数：
+- shoot 播放帧率：
+- 其他说明：
+
+--------------------
+豌豆射手参数参考（当前项目源码）
+--------------------
+
+英文 ID：PEASHOOTER
+植物类型：SUBCLASS_SHOOTER
+阳光价格：101
+卡片冷却：750 tick（约 7.5 秒）
+生命值：300
+单发伤害：20
+攻击间隔：150 - Rand(15) tick（约 1.36～1.50 秒）
+攻击动画速率：35.0
+攻击计时：mShootingCounter = 33
+子弹生成时刻：mShootingCounter 递减到 1 时
+子弹类型：PROJECTILE_PEA
+子弹飞行贴图：静态 1 帧
+子弹速度：3.33 像素/tick（约 333 像素/秒）
+命中特效：PARTICLE_PEA_SPLAT
+发射点 X：mX + GetPeaHeadOffsetX() + 24
+发射点 Y：mY + GetPeaHeadOffsetY() - 33
+待机动画：anim_idle + anim_head_idle
+攻击动画：anim_shooting（原版只切换头部动画）
