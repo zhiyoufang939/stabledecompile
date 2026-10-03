@@ -24,6 +24,7 @@
 #include "Widget/AchievementsScreen.h"
 #include "ToolTipWidget.h"
 #include "../Sexy.TodLib/FilterEffect.h"
+#include "WeikuConfig.h"
 
 PlantDefinition gPlantDefs[SeedType::NUM_SEED_TYPES] = {  //0x69F2B0
     { SeedType::SEED_PEASHOOTER,        nullptr, ReanimationType::REANIM_PEASHOOTER,    0,  101,    750,    PlantSubClass::SUBCLASS_SHOOTER,    150,    _S("PEASHOOTER") },
@@ -88,7 +89,8 @@ PlantDefinition gPlantDefs[SeedType::NUM_SEED_TYPES] = {  //0x69F2B0
     { SeedType::SEED_EXPLODE_O_NUT,     nullptr, ReanimationType::REANIM_WALLNUT,       2,  50,     3000,   PlantSubClass::SUBCLASS_NORMAL,     0,      _S("EXPLODE_O_NUT") },
     { SeedType::SEED_GIANT_WALLNUT,     nullptr, ReanimationType::REANIM_WALLNUT,       2,  400,    3000,   PlantSubClass::SUBCLASS_NORMAL,     0,      _S("GIANT_WALLNUT") },
     { SeedType::SEED_SPROUT,            nullptr, ReanimationType::REANIM_ZENGARDEN_SPROUT,  33, 0,  3000,   PlantSubClass::SUBCLASS_NORMAL,     0,      _S("SPROUT") },
-    { SeedType::SEED_LEFTPEATER,        nullptr, ReanimationType::REANIM_REPEATER,      5,  200,    750,    PlantSubClass::SUBCLASS_SHOOTER,    150,    _S("REPEATER") }
+    { SeedType::SEED_LEFTPEATER,        nullptr, ReanimationType::REANIM_REPEATER,      5,  200,    750,    PlantSubClass::SUBCLASS_SHOOTER,    150,    _S("REPEATER") },
+    { SeedType::SEED_WEIKU,             nullptr, ReanimationType::REANIM_WEIKU,         0,  101,    750,    PlantSubClass::SUBCLASS_SHOOTER,    WeikuConfig::kShootTicks, _S("WEIKU") }
 };
 
 //0x401B20
@@ -334,6 +336,12 @@ void Plant::PlantInitialize(int theGridX, int theGridY, SeedType theSeedType, Se
                 aHeadReanim->AttachToAnotherReanimation(aBodyReanim, "anim_stem");
             else if (aBodyReanim->TrackExists("anim_idle"))
                 aHeadReanim->AttachToAnotherReanimation(aBodyReanim, "anim_idle");
+        }
+        break;
+    case SeedType::SEED_WEIKU:
+        if (aBodyReanim)
+        {
+            aBodyReanim->mAnimRate = WeikuConfig::kIdleFrameCount / WeikuConfig::kIdleSeconds;
         }
         break;
     case SeedType::SEED_SPLITPEA:
@@ -1046,7 +1054,13 @@ bool Plant::FindTargetAndFire(int theRow, PlantWeapon thePlantWeapon)
     Reanimation* aBodyReanim = mApp->ReanimationTryToGet(mBodyReanimID);
     Reanimation* aHeadReanim = mApp->ReanimationTryToGet(mHeadReanimID);
 
-    if (mSeedType == SeedType::SEED_SPLITPEA && thePlantWeapon == PlantWeapon::WEAPON_SECONDARY)
+    if (mSeedType == SeedType::SEED_WEIKU)
+    {
+        PlayBodyReanim("anim_shooting", ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD, 0,
+            WeikuConfig::kShootFrameCount / WeikuConfig::kShootSeconds);
+        mShootingCounter = WeikuConfig::kShootTicks + 1;
+    }
+    else if (mSeedType == SeedType::SEED_SPLITPEA && thePlantWeapon == PlantWeapon::WEAPON_SECONDARY)
     {
         Reanimation* aHeadReanim2 = mApp->ReanimationGet(mHeadReanimID2);
         aHeadReanim2->StartBlend(20);
@@ -1296,7 +1310,7 @@ void Plant::UpdateShooter()
     mLaunchCounter--;
     if (mLaunchCounter <= 0)
     {
-        mLaunchCounter = mLaunchRate - Sexy::Rand(15);
+        mLaunchCounter = mSeedType == SeedType::SEED_WEIKU ? mLaunchRate : mLaunchRate - Sexy::Rand(15);
 #ifdef _MOBILE_MINIGAMES
         if (mState == PlantState::STATE_HEAT_WAVE_POWERED)
             mLaunchCounter = 26;
@@ -3934,6 +3948,20 @@ void Plant::UpdateShooting()
 
     mShootingCounter--;
 
+    if (mSeedType == SeedType::SEED_WEIKU)
+    {
+        if (mShootingCounter == WeikuConfig::kFireCounter)
+        {
+            Fire(nullptr, mRow, PlantWeapon::WEAPON_PRIMARY);
+        }
+        if (mShootingCounter == 1)
+        {
+            mShootingCounter = 0;
+            PlayIdleAnim(0.0f);
+        }
+        return;
+    }
+
     if (mSeedType == SeedType::SEED_FUMESHROOM && mShootingCounter == 15)
     {
         int aRenderPosition = Board::MakeRenderOrder(RenderLayer::RENDER_LAYER_PARTICLE, mRow, 0);
@@ -5933,6 +5961,9 @@ void Plant::Fire(Zombie* theTargetZombie, int theRow, PlantWeapon thePlantWeapon
     case SeedType::SEED_LEFTPEATER:
         aProjectileType = ProjectileType::PROJECTILE_PEA;
         break;
+    case SeedType::SEED_WEIKU:
+        aProjectileType = ProjectileType::PROJECTILE_WEIKU;
+        break;
     case SeedType::SEED_SNOWPEA:
         aProjectileType = ProjectileType::PROJECTILE_SNOWPEA;
         break;
@@ -6029,6 +6060,11 @@ void Plant::Fire(Zombie* theTargetZombie, int theRow, PlantWeapon thePlantWeapon
     {
         aOriginX = mX + 12;
         aOriginY = mY - 56;
+    }
+    else if (mSeedType == SeedType::SEED_WEIKU)
+    {
+        aOriginX = mX + 90;
+        aOriginY = mY + 32;
     }
     else if (mSeedType == SeedType::SEED_PEASHOOTER || mSeedType == SeedType::SEED_SNOWPEA || mSeedType == SeedType::SEED_REPEATER)
     {
@@ -6801,6 +6837,10 @@ bool Plant::PreloadPlantResources(SeedType theSeedType)
     {
         ReanimatorEnsureDefinitionLoaded(aPlantDef.mReanimationType, true);
     }
+    if (theSeedType == SeedType::SEED_WEIKU)
+    {
+        ReanimatorEnsureDefinitionLoaded(ReanimationType::REANIM_WEIKU_PROJECTILE, true);
+    }
 
 #ifdef _DS_MINIGAMES
     if (theSeedType == SeedType::SEED_PEASHOOTER && gLawnApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_HEAT_WAVE)
@@ -6852,6 +6892,10 @@ void Plant::PlayIdleAnim(float theRate)
     Reanimation* aBodyReanim = mApp->ReanimationTryToGet(mBodyReanimID);
     if (aBodyReanim)
     {
+        if (mSeedType == SeedType::SEED_WEIKU)
+        {
+            theRate = WeikuConfig::kIdleFrameCount / WeikuConfig::kIdleSeconds;
+        }
         const char* aTrackAnim = "anim_idle";
 
 #ifdef _DS_MINIGAMES

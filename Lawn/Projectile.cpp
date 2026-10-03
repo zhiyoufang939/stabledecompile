@@ -14,6 +14,7 @@
 #include "../Sexy.TodLib/Trail.h"
 #include "../Sexy.TodLib/EffectSystem.h"
 #include "../Sexy.TodLib/FilterEffect.h"
+#include "WeikuConfig.h"
 
 ProjectileDefinition gProjectileDefinition[] = {  //0x69F1C0
 	{ ProjectileType::PROJECTILE_PEA,           0,  20  },
@@ -35,8 +36,9 @@ ProjectileDefinition gProjectileDefinition[] = {  //0x69F1C0
 #endif
 #ifdef _HAS_BLOOM_AND_DOOM_CONTENTS
 	{ ProjectileType::PROJECTILE_LETTUCE,       10, 40  },
-	{ ProjectileType::PROJECTILE_BEE,			3,  20  }
+	{ ProjectileType::PROJECTILE_BEE,			3,  20  },
 #endif
+	{ ProjectileType::PROJECTILE_WEIKU,         0,  20  }
 };
 
 Projectile::Projectile()
@@ -205,6 +207,14 @@ void Projectile::ProjectileInitialize(int theX, int theY, int theRenderOrder, in
 		{
 			mRotationSpeed = -mRotationSpeed;
 		}
+	}
+	else if (mProjectileType == ProjectileType::PROJECTILE_WEIKU)
+	{
+		Reanimation* aProjectileReanim = mApp->AddReanimation(0.0f, 0.0f, mRenderOrder, ReanimationType::REANIM_WEIKU_PROJECTILE);
+		aProjectileReanim->SetFramesForLayer("anim_fly");
+		aProjectileReanim->mLoopType = ReanimLoopType::REANIM_LOOP;
+		aProjectileReanim->mAnimRate = WeikuConfig::kFlyFrameCount / WeikuConfig::kFlySeconds;
+		AttachReanim(mAttachmentID, aProjectileReanim, 0.0f, 0.0f);
 	}
 #ifdef _HAS_BLOOM_AND_DOOM_CONTENTS
 	else if (mProjectileType == ProjectileType::PROJECTILE_LETTUCE)
@@ -505,6 +515,7 @@ bool Projectile::CantHitHighGround()
 
 	return (
 		mProjectileType == ProjectileType::PROJECTILE_PEA ||
+		mProjectileType == ProjectileType::PROJECTILE_WEIKU ||
 		mProjectileType == ProjectileType::PROJECTILE_SNOWPEA ||
 		mProjectileType == ProjectileType::PROJECTILE_STAR ||
 		mProjectileType == ProjectileType::PROJECTILE_PUFF ||
@@ -518,6 +529,7 @@ void Projectile::CheckForHighGround()
 	float aShadowDelta = mShadowY - mPosY;
 
 	if (mProjectileType == ProjectileType::PROJECTILE_PEA ||
+		mProjectileType == ProjectileType::PROJECTILE_WEIKU ||
 		mProjectileType == ProjectileType::PROJECTILE_SNOWPEA ||
 		mProjectileType == ProjectileType::PROJECTILE_FIREBALL ||
 		mProjectileType == ProjectileType::PROJECTILE_SPIKE ||
@@ -1396,7 +1408,8 @@ void Projectile::Update()
 		return;
 
 	int aTime = 20;
-	if (mProjectileType == ProjectileType::PROJECTILE_PEA || 
+	if (mProjectileType == ProjectileType::PROJECTILE_PEA ||
+		mProjectileType == ProjectileType::PROJECTILE_WEIKU ||
 		mProjectileType == ProjectileType::PROJECTILE_SNOWPEA || 
 		mProjectileType == ProjectileType::PROJECTILE_CABBAGE || 
 		mProjectileType == ProjectileType::PROJECTILE_MELON || 
@@ -1475,6 +1488,10 @@ void Projectile::Draw(Graphics* g)
 		aImage = IMAGE_PROJECTILESNOWPEA;
 	}
 	else if (mProjectileType == ProjectileType::PROJECTILE_FIREBALL)
+	{
+		aImage = nullptr;
+	}
+	else if (mProjectileType == ProjectileType::PROJECTILE_WEIKU)
 	{
 		aImage = nullptr;
 	}
@@ -1650,6 +1667,7 @@ void Projectile::DrawShadow(Graphics* g)
 	switch (mProjectileType)
 	{
 	case ProjectileType::PROJECTILE_PEA:
+	case ProjectileType::PROJECTILE_WEIKU:
 	case ProjectileType::PROJECTILE_ZOMBIE_PEA:
 		aOffsetX += 3.0f;
 		break;
@@ -1749,7 +1767,8 @@ void Projectile::Die()
 //0x46EBC0
 Rect Projectile::GetProjectileRect()
 {
-	if (mProjectileType == ProjectileType::PROJECTILE_PEA || 
+	if (mProjectileType == ProjectileType::PROJECTILE_PEA ||
+		mProjectileType == ProjectileType::PROJECTILE_WEIKU ||
 		mProjectileType == ProjectileType::PROJECTILE_SNOWPEA ||
 		mProjectileType == ProjectileType::PROJECTILE_ZOMBIE_PEA 
 #ifdef _HAS_BLOOM_AND_DOOM_CONTENTS

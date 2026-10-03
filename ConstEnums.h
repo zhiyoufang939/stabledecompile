@@ -863,6 +863,7 @@ enum ProjectileType
     PROJECTILE_LETTUCE,
     PROJECTILE_BEE,
 #endif
+    PROJECTILE_WEIKU,
     NUM_PROJECTILES
 };
 enum ReanimationType : unsigned int {
@@ -1025,6 +1026,8 @@ enum ReanimationType : unsigned int {
 #ifdef _HAS_ZOMBATAR
     REANIM_ZOMBATAR,
 #endif
+    REANIM_WEIKU,
+    REANIM_WEIKU_PROJECTILE,
     NUM_REANIMS
 };
 enum ReanimLoopType
@@ -1163,6 +1166,7 @@ enum SeedType
     SEED_GIANT_WALLNUT,
     SEED_SPROUT,
     SEED_LEFTPEATER,
+    SEED_WEIKU,
     NUM_SEED_TYPES,
     SEED_BEGHOULED_BUTTON_SHUFFLE,
     SEED_BEGHOULED_BUTTON_CRATER,

@@ -1,5 +1,62 @@
 <?xml version="1.0"?>
 <ResourceManifest>
-    
+<!-- WEIKU GENERATED START -->
+<Resources id="LoadingImages">
+  <SetDefaults path="extension/reanim/weiku" idprefix="" />
+  <Image id="IMAGE_REANIM_WEIKU_IDLE_00" path="idle_00" />
+  <Image id="IMAGE_REANIM_WEIKU_IDLE_01" path="idle_01" />
+  <Image id="IMAGE_REANIM_WEIKU_IDLE_02" path="idle_02" />
+  <Image id="IMAGE_REANIM_WEIKU_IDLE_03" path="idle_03" />
+  <Image id="IMAGE_REANIM_WEIKU_IDLE_04" path="idle_04" />
+  <Image id="IMAGE_REANIM_WEIKU_IDLE_05" path="idle_05" />
+  <Image id="IMAGE_REANIM_WEIKU_IDLE_06" path="idle_06" />
+  <Image id="IMAGE_REANIM_WEIKU_IDLE_07" path="idle_07" />
+  <Image id="IMAGE_REANIM_WEIKU_IDLE_08" path="idle_08" />
+  <Image id="IMAGE_REANIM_WEIKU_IDLE_09" path="idle_09" />
+  <Image id="IMAGE_REANIM_WEIKU_IDLE_10" path="idle_10" />
+  <Image id="IMAGE_REANIM_WEIKU_IDLE_11" path="idle_11" />
+  <Image id="IMAGE_REANIM_WEIKU_IDLE_12" path="idle_12" />
+  <Image id="IMAGE_REANIM_WEIKU_IDLE_13" path="idle_13" />
+  <Image id="IMAGE_REANIM_WEIKU_IDLE_14" path="idle_14" />
+  <Image id="IMAGE_REANIM_WEIKU_IDLE_15" path="idle_15" />
+  <Image id="IMAGE_REANIM_WEIKU_IDLE_16" path="idle_16" />
+  <Image id="IMAGE_REANIM_WEIKU_IDLE_17" path="idle_17" />
+  <Image id="IMAGE_REANIM_WEIKU_SHOOT_00" path="shoot_00" />
+  <Image id="IMAGE_REANIM_WEIKU_SHOOT_01" path="shoot_01" />
+  <Image id="IMAGE_REANIM_WEIKU_SHOOT_02" path="shoot_02" />
+  <Image id="IMAGE_REANIM_WEIKU_SHOOT_03" path="shoot_03" />
+  <Image id="IMAGE_REANIM_WEIKU_SHOOT_04" path="shoot_04" />
+  <Image id="IMAGE_REANIM_WEIKU_SHOOT_05" path="shoot_05" />
+  <Image id="IMAGE_REANIM_WEIKU_SHOOT_06" path="shoot_06" />
+  <Image id="IMAGE_REANIM_WEIKU_SHOOT_07" path="shoot_07" />
+  <Image id="IMAGE_REANIM_WEIKU_SHOOT_08" path="shoot_08" />
+  <Image id="IMAGE_REANIM_WEIKU_SHOOT_09" path="shoot_09" />
+  <Image id="IMAGE_REANIM_WEIKU_SHOOT_10" path="shoot_10" />
+  <Image id="IMAGE_REANIM_WEIKU_SHOOT_11" path="shoot_11" />
+  <Image id="IMAGE_REANIM_WEIKU_SHOOT_12" path="shoot_12" />
+  <Image id="IMAGE_REANIM_WEIKU_SHOOT_13" path="shoot_13" />
+  <Image id="IMAGE_REANIM_WEIKU_SHOOT_14" path="shoot_14" />
+  <Image id="IMAGE_REANIM_WEIKU_SHOOT_15" path="shoot_15" />
+  <Image id="IMAGE_REANIM_WEIKU_SHOOT_16" path="shoot_16" />
+  <Image id="IMAGE_REANIM_WEIKU_SHOOT_17" path="shoot_17" />
+  <Image id="IMAGE_REANIM_WEIKU_SHOOT_18" path="shoot_18" />
+  <Image id="IMAGE_REANIM_WEIKU_SHOOT_19" path="shoot_19" />
+  <Image id="IMAGE_REANIM_WEIKU_SHOOT_20" path="shoot_20" />
+  <Image id="IMAGE_REANIM_WEIKU_SHOOT_21" path="shoot_21" />
+  <Image id="IMAGE_REANIM_WEIKU_SHOOT_22" path="shoot_22" />
+  <Image id="IMAGE_REANIM_WEIKU_SHOOT_23" path="shoot_23" />
+  <Image id="IMAGE_REANIM_WEIKU_SHOOT_24" path="shoot_24" />
+  <Image id="IMAGE_REANIM_WEIKU_SHOOT_25" path="shoot_25" />
+  <Image id="IMAGE_REANIM_WEIKU_FLY_00" path="fly_00" />
+  <Image id="IMAGE_REANIM_WEIKU_FLY_01" path="fly_01" />
+  <Image id="IMAGE_REANIM_WEIKU_FLY_02" path="fly_02" />
+  <Image id="IMAGE_REANIM_WEIKU_FLY_03" path="fly_03" />
+  <Image id="IMAGE_REANIM_WEIKU_FLY_04" path="fly_04" />
+  <Image id="IMAGE_REANIM_WEIKU_FLY_05" path="fly_05" />
+  <Image id="IMAGE_REANIM_WEIKU_FLY_06" path="fly_06" />
+  <Image id="IMAGE_REANIM_WEIKU_FLY_07" path="fly_07" />
+  <Image id="IMAGE_REANIM_WEIKU_FLY_08" path="fly_08" />
+  <Image id="IMAGE_REANIM_WEIKU_FLY_09" path="fly_09" />
+</Resources>
+<!-- WEIKU GENERATED END -->
 </ResourceManifest>
-        

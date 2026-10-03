@@ -1,0 +1,5 @@
+[WEIKU]
+WEIKU
+
+[WEIKU_TOOLTIP]
+Attacks like a Peashooter.
