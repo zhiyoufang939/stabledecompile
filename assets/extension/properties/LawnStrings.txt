@@ -1,5 +1,11 @@
-[WEIKU]
-WEIKU
+[WEIKU_C]
+WEIKU_C
 
-[WEIKU_TOOLTIP]
+[WEIKU_C_TOOLTIP]
 Attacks like a Peashooter.
+
+[WEIKU_B]
+WEIKU_B
+
+[WEIKU_B_TOOLTIP]
+Attacks like WEIKU_C.

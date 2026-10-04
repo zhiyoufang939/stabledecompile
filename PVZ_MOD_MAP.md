@@ -77,21 +77,21 @@ SeedType
 | 存档固定植物数组 | `PlayerInfo.h/.cpp` | `mPlantedPlants[...]`；修改范围可能影响存档格式 |
 | SeedType 存档兼容 | `ConstEnums.h`; `SaveGame.cpp` | 旧枚举值不可重新排序；新增类型应避免插入旧枚举之间 |
 
-## WEIKU 实现定位
+## WEIKU_C / WEIKU_B 实现定位
 
 | 内容 | 文件 / 目录 | 参数 / 链路 |
 |---|---|---|
-| 原始素材与时间配置 | `art_source/new_plants/WEIKU/` | `timing.ini`; `sync_assets.ps1`; `plant/idle`; `plant/shoot`; `projectile/fly` |
-| 生成的编译期配置 | `Lawn/WeikuConfig.h` | 帧数、idle/shoot/fly 时长、`kFireFrameIndex`、`kShootTicks`、`kFireCounter` |
-| 植物注册 | `ConstEnums.h`; `Lawn/Plant.cpp` | `SEED_WEIKU`; `gPlantDefs`; `REANIM_WEIKU`; `SUBCLASS_SHOOTER` |
+| 原始素材与时间配置 | `art_source/new_plants/WEIKU_C/`; `WEIKU_B/` | 各自的 `timing.ini`; `sync_assets.ps1`; `plant/idle`; `plant/shoot`; `projectile/fly` |
+| 生成的编译期配置 | `Lawn/WeikuCConfig.h`; `WeikuBConfig.h` | 帧数、idle/shoot/fly 时长、`kFireFrameIndex`、`kShootTicks`、`kFireCounter` |
+| 植物注册 | `ConstEnums.h`; `Lawn/Plant.cpp` | `SEED_WEIKU_C/B`; `gPlantDefs`; `REANIM_WEIKU_C/B`; `SUBCLASS_SHOOTER` |
 | 攻击计时与发射 | `Lawn/Plant.cpp` | `FindTargetAndFire`; `UpdateShooter`; `UpdateShooting`; `Plant::Fire`; `_shoot.png` 对应 `kFireCounter` |
-| 子弹注册与绘制 | `ConstEnums.h`; `Lawn/Projectile.cpp` | `PROJECTILE_WEIKU`; `REANIM_WEIKU_PROJECTILE`; 20 伤害；直线速度复用普通射弹更新 |
-| Reanimation 注册 | `ConstEnums.h`; `Sexy.TodLib/Reanimator.cpp` | `REANIM_WEIKU`; `REANIM_WEIKU_PROJECTILE`; `Weiku.reanim`; `WeikuProjectile.reanim` |
-| 运行贴图 | `assets/extension/reanim/weiku/` | `idle_*.png`; `shoot_*.png`; `fly_*.png` |
-| 资源清单 | `assets/extension/properties/resources.xml` | WEIKU 生成区块；`SetDefaults path="extension/reanim/weiku" idprefix=""` |
-| compiled 缓存 | `assets/extension/compiled/reanim/` | `Weiku.reanim.compiled`; `WeikuProjectile.reanim.compiled`；XML 较新时运行时重编译 |
-| 名称与提示 | `assets/extension/properties/LawnStrings.txt` | `[WEIKU]`; `[WEIKU_TOOLTIP]`; 当前使用 ASCII 避免非宽字符转换断言 |
-| 独立选卡入口 | `Lawn/Widget/SeedChooserScreen.cpp`; `LawnApp.cpp` | `SeedTypeIsInNormalChooser`; 最后一行第一格；`HasSeedType(SEED_WEIKU)` |
+| 子弹注册与绘制 | `ConstEnums.h`; `Lawn/Projectile.cpp` | `PROJECTILE_WEIKU_C/B`; `REANIM_WEIKU_C/B_PROJECTILE`; 20 伤害；直线速度复用普通射弹更新 |
+| Reanimation 注册 | `ConstEnums.h`; `Sexy.TodLib/Reanimator.cpp` | C/B 的植物和子弹 Reanimation；`WeikuC*.reanim`; `WeikuB*.reanim` |
+| 运行贴图 | `assets/extension/reanim/weiku_c/`; `weiku_b/` | `idle_*.png`; `shoot_*.png`; `fly_*.png` |
+| 资源清单 | `assets/extension/properties/resources.xml` | C/B 独立生成区块和独立 `SetDefaults` 路径 |
+| compiled 缓存 | `assets/extension/compiled/reanim/` | C/B 各自的 `.reanim.compiled`；XML 较新时运行时重编译 |
+| 名称与提示 | `assets/extension/properties/LawnStrings.txt` | `[WEIKU_C/B]`; `[WEIKU_C/B_TOOLTIP]`; 当前使用 ASCII 避免非宽字符转换断言 |
+| 独立选卡入口 | `Lawn/Widget/SeedChooserScreen.cpp`; `LawnApp.cpp` | `SeedTypeIsInNormalChooser`; 最后一行第一、二格；`HasSeedType(SEED_WEIKU_C/B)` |
 
 ## 玩家金币
 

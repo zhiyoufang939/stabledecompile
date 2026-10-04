@@ -3597,7 +3597,7 @@ int LawnApp::GetSeedsAvailable()
 //0x453B20
 bool LawnApp::HasSeedType(SeedType theSeedType)
 {
-	if (theSeedType == SeedType::SEED_WEIKU)
+	if (theSeedType == SeedType::SEED_WEIKU_C || theSeedType == SeedType::SEED_WEIKU_B)
 		return true;
 
 	if (IsTrialStageLocked() && theSeedType >= SeedType::SEED_JALAPENO)

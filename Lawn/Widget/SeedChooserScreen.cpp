@@ -24,7 +24,7 @@
 static bool SeedTypeIsInNormalChooser(SeedType theSeedType)
 {
 	return (theSeedType >= SeedType::SEED_PEASHOOTER && theSeedType < SeedType::NUM_SEEDS_IN_CHOOSER) ||
-		theSeedType == SeedType::SEED_WEIKU;
+		theSeedType == SeedType::SEED_WEIKU_C || theSeedType == SeedType::SEED_WEIKU_B;
 }
 
 //0x483380
@@ -325,7 +325,7 @@ void SeedChooserScreen::CrazyDavePickSeeds()
 //0x484220
 bool SeedChooserScreen::Has7Rows()
 {
-	if (mApp->SeedTypeAvailable(SeedType::SEED_WEIKU))
+	if (mApp->SeedTypeAvailable(SeedType::SEED_WEIKU_C) || mApp->SeedTypeAvailable(SeedType::SEED_WEIKU_B))
 	{
 		return true;
 	}
@@ -351,7 +351,8 @@ void SeedChooserScreen::GetSeedPositionInChooser(int theIndex, int& x, int& y)
 	}
 	else
 	{
-		if (theIndex == SeedType::SEED_WEIKU) theIndex = SeedType::NUM_SEEDS_IN_CHOOSER;
+		if (theIndex == SeedType::SEED_WEIKU_C) theIndex = SeedType::NUM_SEEDS_IN_CHOOSER;
+		if (theIndex == SeedType::SEED_WEIKU_B) theIndex = SeedType::NUM_SEEDS_IN_CHOOSER + 1;
 		if (theIndex > SeedType::SEED_IMITATER) theIndex--;
 
 		int aRow = theIndex / 8;
@@ -1311,7 +1312,7 @@ void SeedChooserScreen::MouseDown(int x, int y, int theClickCount)
 					{
 						ClickedSeedInChooser(aChosenSeed);
 					}
-					else if (theClickCount == -1 && aSeedType != SeedType::SEED_WEIKU)
+					else if (theClickCount == -1 && aSeedType != SeedType::SEED_WEIKU_C && aSeedType != SeedType::SEED_WEIKU_B)
 					{
 						mApp->PlaySample(SOUND_TAP);
 						mApp->DoAlmanacDialog(aSeedType)->WaitForResult(true);

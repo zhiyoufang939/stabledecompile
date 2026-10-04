@@ -185,8 +185,10 @@ ReanimationParams gLawnReanimationArray[(int)ReanimationType::NUM_REANIMS] = { /
 #ifdef _HAS_ZOMBATAR
 	{ ReanimationType::REANIM_ZOMBATAR,								"reanim\\zombatar_zombie_head.reanim",             0 }, // @Inliothixi: 006E73B8
 #endif
-	{ ReanimationType::REANIM_WEIKU,                                "reanim\\Weiku.reanim",                            0 },
-	{ ReanimationType::REANIM_WEIKU_PROJECTILE,                     "reanim\\WeikuProjectile.reanim",                  0 },
+	{ ReanimationType::REANIM_WEIKU_C,                              "reanim\\WeikuC.reanim",                           0 },
+	{ ReanimationType::REANIM_WEIKU_C_PROJECTILE,                   "reanim\\WeikuCProjectile.reanim",                 0 },
+	{ ReanimationType::REANIM_WEIKU_B,                              "reanim\\WeikuB.reanim",                           0 },
+	{ ReanimationType::REANIM_WEIKU_B_PROJECTILE,                   "reanim\\WeikuBProjectile.reanim",                 0 },
 };
 
 //0x471540

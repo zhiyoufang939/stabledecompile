@@ -14,7 +14,28 @@
 #include "../Sexy.TodLib/Trail.h"
 #include "../Sexy.TodLib/EffectSystem.h"
 #include "../Sexy.TodLib/FilterEffect.h"
-#include "WeikuConfig.h"
+#include "WeikuCConfig.h"
+#include "WeikuBConfig.h"
+
+static bool IsWeikuProjectile(ProjectileType theProjectileType)
+{
+	return theProjectileType == ProjectileType::PROJECTILE_WEIKU_C ||
+		theProjectileType == ProjectileType::PROJECTILE_WEIKU_B;
+}
+
+static ReanimationType GetWeikuProjectileReanimType(ProjectileType theProjectileType)
+{
+	return theProjectileType == ProjectileType::PROJECTILE_WEIKU_B
+		? ReanimationType::REANIM_WEIKU_B_PROJECTILE
+		: ReanimationType::REANIM_WEIKU_C_PROJECTILE;
+}
+
+static float GetWeikuProjectileAnimRate(ProjectileType theProjectileType)
+{
+	return theProjectileType == ProjectileType::PROJECTILE_WEIKU_B
+		? WeikuBConfig::kFlyFrameCount / WeikuBConfig::kFlySeconds
+		: WeikuCConfig::kFlyFrameCount / WeikuCConfig::kFlySeconds;
+}
 
 ProjectileDefinition gProjectileDefinition[] = {  //0x69F1C0
 	{ ProjectileType::PROJECTILE_PEA,           0,  20  },
@@ -38,7 +59,8 @@ ProjectileDefinition gProjectileDefinition[] = {  //0x69F1C0
 	{ ProjectileType::PROJECTILE_LETTUCE,       10, 40  },
 	{ ProjectileType::PROJECTILE_BEE,			3,  20  },
 #endif
-	{ ProjectileType::PROJECTILE_WEIKU,         0,  20  }
+	{ ProjectileType::PROJECTILE_WEIKU_C,       0,  20  },
+	{ ProjectileType::PROJECTILE_WEIKU_B,       0,  20  }
 };
 
 Projectile::Projectile()
@@ -208,12 +230,12 @@ void Projectile::ProjectileInitialize(int theX, int theY, int theRenderOrder, in
 			mRotationSpeed = -mRotationSpeed;
 		}
 	}
-	else if (mProjectileType == ProjectileType::PROJECTILE_WEIKU)
+	else if (IsWeikuProjectile(mProjectileType))
 	{
-		Reanimation* aProjectileReanim = mApp->AddReanimation(0.0f, 0.0f, mRenderOrder, ReanimationType::REANIM_WEIKU_PROJECTILE);
+		Reanimation* aProjectileReanim = mApp->AddReanimation(0.0f, 0.0f, mRenderOrder, GetWeikuProjectileReanimType(mProjectileType));
 		aProjectileReanim->SetFramesForLayer("anim_fly");
 		aProjectileReanim->mLoopType = ReanimLoopType::REANIM_LOOP;
-		aProjectileReanim->mAnimRate = WeikuConfig::kFlyFrameCount / WeikuConfig::kFlySeconds;
+		aProjectileReanim->mAnimRate = GetWeikuProjectileAnimRate(mProjectileType);
 		AttachReanim(mAttachmentID, aProjectileReanim, 0.0f, 0.0f);
 	}
 #ifdef _HAS_BLOOM_AND_DOOM_CONTENTS
@@ -515,7 +537,7 @@ bool Projectile::CantHitHighGround()
 
 	return (
 		mProjectileType == ProjectileType::PROJECTILE_PEA ||
-		mProjectileType == ProjectileType::PROJECTILE_WEIKU ||
+		IsWeikuProjectile(mProjectileType) ||
 		mProjectileType == ProjectileType::PROJECTILE_SNOWPEA ||
 		mProjectileType == ProjectileType::PROJECTILE_STAR ||
 		mProjectileType == ProjectileType::PROJECTILE_PUFF ||
@@ -529,7 +551,7 @@ void Projectile::CheckForHighGround()
 	float aShadowDelta = mShadowY - mPosY;
 
 	if (mProjectileType == ProjectileType::PROJECTILE_PEA ||
-		mProjectileType == ProjectileType::PROJECTILE_WEIKU ||
+		IsWeikuProjectile(mProjectileType) ||
 		mProjectileType == ProjectileType::PROJECTILE_SNOWPEA ||
 		mProjectileType == ProjectileType::PROJECTILE_FIREBALL ||
 		mProjectileType == ProjectileType::PROJECTILE_SPIKE ||
@@ -1409,7 +1431,7 @@ void Projectile::Update()
 
 	int aTime = 20;
 	if (mProjectileType == ProjectileType::PROJECTILE_PEA ||
-		mProjectileType == ProjectileType::PROJECTILE_WEIKU ||
+		IsWeikuProjectile(mProjectileType) ||
 		mProjectileType == ProjectileType::PROJECTILE_SNOWPEA || 
 		mProjectileType == ProjectileType::PROJECTILE_CABBAGE || 
 		mProjectileType == ProjectileType::PROJECTILE_MELON || 
@@ -1491,7 +1513,7 @@ void Projectile::Draw(Graphics* g)
 	{
 		aImage = nullptr;
 	}
-	else if (mProjectileType == ProjectileType::PROJECTILE_WEIKU)
+	else if (IsWeikuProjectile(mProjectileType))
 	{
 		aImage = nullptr;
 	}
@@ -1667,7 +1689,8 @@ void Projectile::DrawShadow(Graphics* g)
 	switch (mProjectileType)
 	{
 	case ProjectileType::PROJECTILE_PEA:
-	case ProjectileType::PROJECTILE_WEIKU:
+	case ProjectileType::PROJECTILE_WEIKU_C:
+	case ProjectileType::PROJECTILE_WEIKU_B:
 	case ProjectileType::PROJECTILE_ZOMBIE_PEA:
 		aOffsetX += 3.0f;
 		break;
@@ -1768,7 +1791,7 @@ void Projectile::Die()
 Rect Projectile::GetProjectileRect()
 {
 	if (mProjectileType == ProjectileType::PROJECTILE_PEA ||
-		mProjectileType == ProjectileType::PROJECTILE_WEIKU ||
+		IsWeikuProjectile(mProjectileType) ||
 		mProjectileType == ProjectileType::PROJECTILE_SNOWPEA ||
 		mProjectileType == ProjectileType::PROJECTILE_ZOMBIE_PEA 
 #ifdef _HAS_BLOOM_AND_DOOM_CONTENTS

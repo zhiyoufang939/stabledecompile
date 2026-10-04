@@ -46,37 +46,39 @@ art_source/new_plants/<plant_id>/
 
 第一版推荐待机动画 `8–16` 帧、攻击动画 `8–12` 帧。帧数不是硬限制；攻击序列至少应包含准备、后坐/发射和回到待机三个阶段，并用文件名中的 `_shoot` 标记发射时刻。
 
-## 已验证实例：WEIKU
+## 已验证实例：WEIKU_C / WEIKU_B
 
 原始素材和可调参数位于：
 
 ```text
-art_source/new_plants/WEIKU/
+art_source/new_plants/WEIKU_C/
+art_source/new_plants/WEIKU_B/
 ```
 
 修改 `timing.ini` 或替换帧后，从仓库根目录运行：
 
 ```powershell
-& '.\art_source\new_plants\WEIKU\sync_assets.ps1'
+& '.\art_source\new_plants\WEIKU_C\sync_assets.ps1'
+& '.\art_source\new_plants\WEIKU_B\sync_assets.ps1'
 ```
 
 脚本会：
 
 - 按文件名前导数字读取 `plant/idle/`、`plant/shoot/` 和 `projectile/fly/`；
 - 要求攻击序列中恰好有一张 `_shoot.png`；
-- 原样复制 PNG 到 `assets/extension/reanim/weiku/`；
-- 生成 `assets/extension/reanim/Weiku.reanim`、`WeikuProjectile.reanim`；
-- 只更新 `assets/extension/properties/resources.xml` 中带 WEIKU 标记的区块；
-- 生成 `Lawn/WeikuConfig.h`，供攻击计时和动画速率使用。
+- 原样复制 PNG 到各自的 `assets/extension/reanim/weiku_c/`、`weiku_b/`；
+- 分别生成 `WeikuC*.reanim`、`WeikuB*.reanim`；
+- 只更新 `assets/extension/properties/resources.xml` 中对应 C/B 标记的区块；
+- 分别生成 `Lawn/WeikuCConfig.h`、`Lawn/WeikuBConfig.h`，供攻击计时和动画速率使用。
 
-ResourceManifest 必须在 WEIKU 分组内显式设置：
+ResourceManifest 必须在各自分组内显式设置，例如：
 
 ```xml
-<SetDefaults path="extension/reanim/weiku" idprefix="" />
+<SetDefaults path="extension/reanim/weiku_c" idprefix="" />
 ```
 
 否则扩展 manifest 会继承此前资源包的默认目录，图片可能被错误解析到 `dependency/sounds/extension/...`。
 
-当前 `DebugGOTY|x64` 为非宽字符构建，游戏内名称暂用 `LawnStrings.txt` 中的 ASCII `WEIKU`。直接将中文宽字符串传给 `WStringToSexyString` 会触发 `Common.cpp` 的字符转换断言；中文显示需要单独解决字体和 Unicode 渲染。
+当前 `DebugGOTY|x64` 为非宽字符构建，游戏内名称暂用 `LawnStrings.txt` 中的 ASCII `WEIKU_C` / `WEIKU_B`。直接将中文宽字符串传给 `WStringToSexyString` 会触发 `Common.cpp` 的字符转换断言；中文显示需要单独解决字体和 Unicode 渲染。
 
-WEIKU 当前 54 张高分辨率运行帧不会预先缩小，加载后内存可超过 1 GB。显示缩放不等于纹理降采样；继续增加植物前应先优化运行贴图尺寸或资源加载方式。
+两套植物的高分辨率运行帧不会预先缩小。显示缩放不等于纹理降采样；继续增加植物前应先优化运行贴图尺寸或资源加载方式。

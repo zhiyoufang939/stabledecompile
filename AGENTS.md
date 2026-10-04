@@ -52,10 +52,10 @@ $env:CL = '/source-charset:.1252'
 
 ## WEIKU 已验证技术路线
 
-- 原始素材目录固定为 ASCII 路径 `art_source/new_plants/WEIKU/`；新植物的目录名、文件名和资源 ID 都优先使用 ASCII，避免 PowerShell、资源加载器和非宽字符构建中的中文路径问题。
-- 修改 `art_source/new_plants/WEIKU/timing.ini` 后运行 `& '.\art_source\new_plants\WEIKU\sync_assets.ps1'`。脚本按文件名前导数字排序，要求恰好一张攻击帧以 `_shoot.png` 结尾，并生成 `Lawn/WeikuConfig.h`、两个 `.reanim`、ResourceManifest 区块以及 `assets/extension/reanim/weiku/` 运行贴图。
+- 原始素材目录固定为 ASCII 路径 `art_source/new_plants/WEIKU_C/` 与 `WEIKU_B/`；新植物的目录名、文件名和资源 ID 都优先使用 ASCII，避免 PowerShell、资源加载器和非宽字符构建中的中文路径问题。
+- 修改 `art_source/new_plants/WEIKU_C/timing.ini` 或 `WEIKU_B/timing.ini` 后，运行对应目录的 `sync_assets.ps1`。脚本按文件名前导数字排序，要求恰好一张攻击帧以 `_shoot.png` 结尾，并为 C/B 分别生成配置头文件、两个 `.reanim`、ResourceManifest 区块及独立运行贴图目录。
 - 当前动画配置：idle 18 帧 / 1.0 秒，shoot 26 帧 / 1.5 秒，fly 10 帧 / 0.8 秒；`25_shoot.png` 决定生成子弹的时刻。shoot 周期同时作为 WEIKU 的固定攻击间隔。
-- 独立植物链路为 `SEED_WEIKU → REANIM_WEIKU → Plant::UpdateShooter/UpdateShooting/Fire → PROJECTILE_WEIKU → REANIM_WEIKU_PROJECTILE`。选卡界面使用额外最后一行，不替换豌豆射手，也不把特殊 SeedType 全部加入普通选卡。
+- 两套独立植物链路为 `SEED_WEIKU_C/B → REANIM_WEIKU_C/B → Plant::UpdateShooter/UpdateShooting/Fire → PROJECTILE_WEIKU_C/B → REANIM_WEIKU_C/B_PROJECTILE`。两者攻击逻辑一致，动画和调参彼此独立；选卡界面使用额外最后一行，不替换豌豆射手，也不把特殊 SeedType 全部加入普通选卡。
 - `assets/extension/properties/resources.xml` 中 WEIKU 区块必须显式使用 `<SetDefaults path="extension/reanim/weiku" idprefix="" />`；否则会继承前一个 manifest 的 `dependency/sounds/` 默认路径。
 - 本构建是非宽字符版本。不要在卡片名称/提示中直接调用 `WStringToSexyString` 转换中文；会在 `Common.cpp` 的 `wcstombs` 断言。当前通过 `assets/extension/properties/LawnStrings.txt` 使用 ASCII 名称 `WEIKU`；真正显示中文需要另行接入含中文字形的 Unicode 字体链。
 - `.reanim.compiled` 是否有效由 XML 与 compiled 文件的修改时间判断。变更帧序列后必须重新运行同步脚本、构建并启动，让运行时重新生成缓存；发布时保留匹配的 `assets/extension/compiled/reanim/*.compiled`。
