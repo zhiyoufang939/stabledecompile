@@ -46,13 +46,14 @@ art_source/new_plants/<plant_id>/
 
 第一版推荐待机动画 `8–16` 帧、攻击动画 `8–12` 帧。帧数不是硬限制；攻击序列至少应包含准备、后坐/发射和回到待机三个阶段，并用文件名中的 `_shoot` 标记发射时刻。
 
-## 已验证实例：WEIKU_C / WEIKU_B
+## 已验证实例：WEIKU_C / WEIKU_B / WEIKU_A
 
 原始素材和可调参数位于：
 
 ```text
 art_source/new_plants/WEIKU_C/
 art_source/new_plants/WEIKU_B/
+art_source/new_plants/WEIKU_A/
 ```
 
 修改 `timing.ini` 或替换帧后，从仓库根目录运行：
@@ -60,16 +61,17 @@ art_source/new_plants/WEIKU_B/
 ```powershell
 & '.\art_source\new_plants\WEIKU_C\sync_assets.ps1'
 & '.\art_source\new_plants\WEIKU_B\sync_assets.ps1'
+& '.\art_source\new_plants\WEIKU_A\sync_assets.ps1'
 ```
 
 脚本会：
 
 - 按文件名前导数字读取 `plant/idle/`、`plant/shoot/` 和 `projectile/fly/`；
 - 要求攻击序列中恰好有一张 `_shoot.png`；
-- 原样复制 PNG 到各自的 `assets/extension/reanim/weiku_c/`、`weiku_b/`；
-- 分别生成 `WeikuC*.reanim`、`WeikuB*.reanim`；
-- 只更新 `assets/extension/properties/resources.xml` 中对应 C/B 标记的区块；
-- 分别生成 `Lawn/WeikuCConfig.h`、`Lawn/WeikuBConfig.h`，供攻击计时和动画速率使用。
+- 原样复制 PNG 到各自的 `assets/extension/reanim/weiku_c/`、`weiku_b/`、`weiku_a/`；
+- 分别生成 `WeikuC*.reanim`、`WeikuB*.reanim`、`WeikuA*.reanim`；
+- 只更新 `assets/extension/properties/resources.xml` 中对应 A/B/C 标记的区块；
+- 分别生成 `Lawn/WeikuCConfig.h`、`Lawn/WeikuBConfig.h`、`Lawn/WeikuAConfig.h`，供攻击计时和动画速率使用。
 
 ResourceManifest 必须在各自分组内显式设置，例如：
 
@@ -79,6 +81,33 @@ ResourceManifest 必须在各自分组内显式设置，例如：
 
 否则扩展 manifest 会继承此前资源包的默认目录，图片可能被错误解析到 `dependency/sounds/extension/...`。
 
-当前 `DebugGOTY|x64` 为非宽字符构建，游戏内名称暂用 `LawnStrings.txt` 中的 ASCII `WEIKU_C` / `WEIKU_B`。直接将中文宽字符串传给 `WStringToSexyString` 会触发 `Common.cpp` 的字符转换断言；中文显示需要单独解决字体和 Unicode 渲染。
+当前 `DebugGOTY|x64` 为非宽字符构建，游戏内名称暂用 `LawnStrings.txt` 中的 ASCII `WEIKU_C` / `WEIKU_B` / `WEIKU_A`。直接将中文宽字符串传给 `WStringToSexyString` 会触发 `Common.cpp` 的字符转换断言；中文显示需要单独解决字体和 Unicode 渲染。
 
-两套植物的高分辨率运行帧不会预先缩小。显示缩放不等于纹理降采样；继续增加植物前应先优化运行贴图尺寸或资源加载方式。
+三套植物的高分辨率运行帧不会预先缩小。显示缩放不等于纹理降采样；继续增加植物前应先优化运行贴图尺寸或资源加载方式。
+
+### 当前实例参数
+
+| 变体 | idle | shoot / 发射帧 | fly | 价格 | 伤害 |
+|---|---:|---:|---:|---:|---:|
+| WEIKU_C | 18 帧 / 1.0 秒 | 26 帧 / 1.5 秒；`25_shoot.png` | 10 帧 / 0.8 秒 | 101 | 20 |
+| WEIKU_B | 18 帧 / 1.0 秒 | 26 帧 / 1.5 秒；`25_shoot.png` | 10 帧 / 0.8 秒 | 200 | 40 |
+| WEIKU_A | 18 帧 / 1.0 秒 | 23 帧 / 1.5 秒；`22_shoot.png` | 10 帧 / 0.8 秒 | 300 | 60 |
+
+`notes.txt` 用于记录人工设计要求，不会被同步脚本解析。`timing.ini` 才是动画时间、缩放、锚点和枪口位置的生成输入；价格与伤害仍在 C++ 的植物/子弹定义中。
+
+### 显示参数含义
+
+- 植物实际帧缩放 = `plant_display_width × plant_scale ÷ 该帧原始 PNG 宽度`。`plant_display_width` 是标准化显示宽度，不是格子宽度或固定画布；`plant_scale` 是整株额外倍率。idle 和 shoot 共用这一套值，并分别按各自原图宽度自动换算。
+- `plant_anchor_x/y` 是整株植物相对格子的视觉偏移，不会改变素材画布大小。
+- 子弹使用独立的 `projectile_scale` 和 `projectile_anchor_x/y`。
+- `muzzle_x/y` 是相对植物格子左上角的实际发射起点，会影响子弹出生与碰撞轨迹；它不是子弹贴图的视觉锚点。
+
+### 修改后生效流程
+
+1. 修改某一变体的 `timing.ini` 或 PNG，并确保 shoot 目录恰好有一张 `_shoot.png`。
+2. 运行该变体的 `sync_assets.ps1`。只改 INI 而不运行脚本不会生效。
+3. 脚本会更新源码资源、对应配置头文件和 `build/DebugGOTY_x64/bin/extension`，同时清除该变体两处 `.reanim.compiled` 缓存。
+4. 重新构建。帧数、时间、发射帧、枪口位置等会进入 C++ 配置头文件，不能只靠资源复制生效；日常统一重建最稳妥。
+5. 从 `build/DebugGOTY_x64/bin` 作为工作目录启动 `PlantsVsZombies.exe`，再在游戏内检查选卡、放置、idle、shoot、发射时刻、fly 和命中。
+
+构建复制不会自动删除运行目录中已经失去来源的旧文件，但只要当前 manifest 和 `.reanim` 不再引用它们就不会进入新链路。若直接启动时报缺少 `dependency.pak`，应检查运行目录和资源副本；这与 INI 是否同步无关。桌面快捷方式还要确认“目标”和“起始位置”均指向当前构建。

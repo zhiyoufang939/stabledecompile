@@ -865,6 +865,7 @@ enum ProjectileType
 #endif
     PROJECTILE_WEIKU_C,
     PROJECTILE_WEIKU_B,
+    PROJECTILE_WEIKU_A,
     NUM_PROJECTILES
 };
 enum ReanimationType : unsigned int {
@@ -1031,6 +1032,8 @@ enum ReanimationType : unsigned int {
     REANIM_WEIKU_C_PROJECTILE,
     REANIM_WEIKU_B,
     REANIM_WEIKU_B_PROJECTILE,
+    REANIM_WEIKU_A,
+    REANIM_WEIKU_A_PROJECTILE,
     NUM_REANIMS
 };
 enum ReanimLoopType
@@ -1171,6 +1174,7 @@ enum SeedType
     SEED_LEFTPEATER,
     SEED_WEIKU_C,
     SEED_WEIKU_B,
+    SEED_WEIKU_A,
     NUM_SEED_TYPES,
     SEED_BEGHOULED_BUTTON_SHUFFLE,
     SEED_BEGHOULED_BUTTON_CRATER,

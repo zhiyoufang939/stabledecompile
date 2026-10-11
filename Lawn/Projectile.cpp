@@ -16,15 +16,19 @@
 #include "../Sexy.TodLib/FilterEffect.h"
 #include "WeikuCConfig.h"
 #include "WeikuBConfig.h"
+#include "WeikuAConfig.h"
 
 static bool IsWeikuProjectile(ProjectileType theProjectileType)
 {
 	return theProjectileType == ProjectileType::PROJECTILE_WEIKU_C ||
-		theProjectileType == ProjectileType::PROJECTILE_WEIKU_B;
+		theProjectileType == ProjectileType::PROJECTILE_WEIKU_B ||
+		theProjectileType == ProjectileType::PROJECTILE_WEIKU_A;
 }
 
 static ReanimationType GetWeikuProjectileReanimType(ProjectileType theProjectileType)
 {
+	if (theProjectileType == ProjectileType::PROJECTILE_WEIKU_A)
+		return ReanimationType::REANIM_WEIKU_A_PROJECTILE;
 	return theProjectileType == ProjectileType::PROJECTILE_WEIKU_B
 		? ReanimationType::REANIM_WEIKU_B_PROJECTILE
 		: ReanimationType::REANIM_WEIKU_C_PROJECTILE;
@@ -32,6 +36,8 @@ static ReanimationType GetWeikuProjectileReanimType(ProjectileType theProjectile
 
 static float GetWeikuProjectileAnimRate(ProjectileType theProjectileType)
 {
+	if (theProjectileType == ProjectileType::PROJECTILE_WEIKU_A)
+		return WeikuAConfig::kFlyFrameCount / WeikuAConfig::kFlySeconds;
 	return theProjectileType == ProjectileType::PROJECTILE_WEIKU_B
 		? WeikuBConfig::kFlyFrameCount / WeikuBConfig::kFlySeconds
 		: WeikuCConfig::kFlyFrameCount / WeikuCConfig::kFlySeconds;
@@ -60,7 +66,8 @@ ProjectileDefinition gProjectileDefinition[] = {  //0x69F1C0
 	{ ProjectileType::PROJECTILE_BEE,			3,  20  },
 #endif
 	{ ProjectileType::PROJECTILE_WEIKU_C,       0,  20  },
-	{ ProjectileType::PROJECTILE_WEIKU_B,       0,  20  }
+	{ ProjectileType::PROJECTILE_WEIKU_B,       0,  40  },
+	{ ProjectileType::PROJECTILE_WEIKU_A,       0,  60  }
 };
 
 Projectile::Projectile()
@@ -1691,6 +1698,7 @@ void Projectile::DrawShadow(Graphics* g)
 	case ProjectileType::PROJECTILE_PEA:
 	case ProjectileType::PROJECTILE_WEIKU_C:
 	case ProjectileType::PROJECTILE_WEIKU_B:
+	case ProjectileType::PROJECTILE_WEIKU_A:
 	case ProjectileType::PROJECTILE_ZOMBIE_PEA:
 		aOffsetX += 3.0f;
 		break;

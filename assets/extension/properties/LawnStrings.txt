@@ -9,3 +9,9 @@ WEIKU_B
 
 [WEIKU_B_TOOLTIP]
 Attacks like WEIKU_C.
+
+[WEIKU_A]
+WEIKU_A
+
+[WEIKU_A_TOOLTIP]
+Attacks like WEIKU_C.

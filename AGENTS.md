@@ -50,14 +50,19 @@ $env:CL = '/source-charset:.1252'
 - 新攻击植物通常还要接入 `Plant::Fire`；自定义子弹才新增 `ProjectileType`。
 - 存档直接保存部分 `SeedType`/对象内存；修改枚举或固定数组前必须先设计兼容方案。
 
-## WEIKU 已验证技术路线
+## WEIKU 阶段性成功基线
 
-- 原始素材目录固定为 ASCII 路径 `art_source/new_plants/WEIKU_C/` 与 `WEIKU_B/`；新植物的目录名、文件名和资源 ID 都优先使用 ASCII，避免 PowerShell、资源加载器和非宽字符构建中的中文路径问题。
-- 修改 `art_source/new_plants/WEIKU_C/timing.ini` 或 `WEIKU_B/timing.ini` 后，运行对应目录的 `sync_assets.ps1`。脚本按文件名前导数字排序，要求恰好一张攻击帧以 `_shoot.png` 结尾，并为 C/B 分别生成配置头文件、两个 `.reanim`、ResourceManifest 区块及独立运行贴图目录。
-- 当前动画配置：idle 18 帧 / 1.0 秒，shoot 26 帧 / 1.5 秒，fly 10 帧 / 0.8 秒；`25_shoot.png` 决定生成子弹的时刻。shoot 周期同时作为 WEIKU 的固定攻击间隔。
-- 两套独立植物链路为 `SEED_WEIKU_C/B → REANIM_WEIKU_C/B → Plant::UpdateShooter/UpdateShooting/Fire → PROJECTILE_WEIKU_C/B → REANIM_WEIKU_C/B_PROJECTILE`。两者攻击逻辑一致，动画和调参彼此独立；选卡界面使用额外最后一行，不替换豌豆射手，也不把特殊 SeedType 全部加入普通选卡。
-- `assets/extension/properties/resources.xml` 中 WEIKU 区块必须显式使用 `<SetDefaults path="extension/reanim/weiku" idprefix="" />`；否则会继承前一个 manifest 的 `dependency/sounds/` 默认路径。
-- 本构建是非宽字符版本。不要在卡片名称/提示中直接调用 `WStringToSexyString` 转换中文；会在 `Common.cpp` 的 `wcstombs` 断言。当前通过 `assets/extension/properties/LawnStrings.txt` 使用 ASCII 名称 `WEIKU`；真正显示中文需要另行接入含中文字形的 Unicode 字体链。
-- `.reanim.compiled` 是否有效由 XML 与 compiled 文件的修改时间判断。变更帧序列后必须重新运行同步脚本、构建并启动，让运行时重新生成缓存；发布时保留匹配的 `assets/extension/compiled/reanim/*.compiled`。
-- 仅检查进程存活不足以证明启动成功：Fatal Error / assertion 对话框出现时进程可能仍存在。必须人工进入选卡界面、选择 WEIKU、放置并观察 idle、shoot、发射帧、fly 和命中。
-- 当前高分辨率 PNG 会原样复制，只在 Reanimation 中缩放；画质得以保留，但实测加载全部 54 帧后进程内存可超过 1 GB。后续增加植物前应优先设计运行贴图降采样、分组加载或纹理压缩方案。
+- 三套独立链路已经接通：`SEED_WEIKU_C/B/A → REANIM_WEIKU_C/B/A → Plant::UpdateShooter/UpdateShooting/Fire → PROJECTILE_WEIKU_C/B/A → REANIM_WEIKU_C/B/A_PROJECTILE`。已完成资源同步、`DebugGOTY|x64` 构建和启动冒烟验证，且用户已在游戏内确认本阶段可用。
+- 当前参数：C 为 idle 18 帧、shoot 26 帧（`25_shoot.png`）、fly 10 帧、价格/伤害 101/20；B 为 18、26（`25_shoot.png`）、10、200/40；A 为 18、23（`22_shoot.png`）、10、300/60。三者时长均为 idle 1.0 秒、shoot 1.5 秒、fly 0.8 秒；shoot 周期也是固定攻击间隔。
+- C/B 原有 `SeedType` 数值保持不变，A 追加在末尾。选卡界面使用额外最后一行的第一、二、三格，不替换豌豆射手，也不把所有特殊 `SeedType` 加入普通选卡。
+- 原始素材目录固定为 ASCII 路径 `art_source/new_plants/WEIKU_C/`、`WEIKU_B/`、`WEIKU_A/`；目录名、文件名和资源 ID 均优先使用 ASCII。各目录的 `notes.txt` 是人工规格说明，脚本不会读取它；实际值仍须落实到 `timing.ini`、素材或 C++ 注册表。
+- `timing.ini` 和素材不能由游戏直接读取。修改后必须运行同目录的 `sync_assets.ps1`；脚本按文件名前导数字排序，要求 shoot 序列中恰好一张 `_shoot.png`，并为该变体生成配置头文件、植物/子弹 `.reanim`、ResourceManifest 区块和独立运行贴图目录。不要手工修改这些生成物后期待下次同步保留。
+- 同步脚本还会直接更新 `build/DebugGOTY_x64/bin/extension`，并只删除该变体在源码资源目录和运行目录中的 `.reanim.compiled` 缓存。构建复制不会清理目标目录中已经失去来源的旧文件；未被当前 manifest/reanimation 引用的旧通用 WEIKU 文件可以存在，但不应当影响当前链路。
+- `plant_display_width` 是标准显示宽度，`plant_scale` 是额外倍率；每帧实际写入 Reanimation 的缩放为 `plant_display_width * plant_scale / 原始 PNG 宽度`。因此它不是固定的 `0.11111`，也不表示 120×80 画布。idle 与 shoot 原图宽度不同会得到不同的内部 `sx/sy`，但标准化后的显示宽度一致。植物只使用一套 `plant_scale`，shoot 自动按自己的原图尺寸换算。
+- `plant_anchor_x/y` 调整整株植物在格子中的视觉位置；`projectile_scale` 与 `projectile_anchor_x/y` 独立控制子弹的显示尺寸和视觉偏移。`muzzle_x/y` 是以植物格子左上角为参照的真实子弹生成/碰撞起点，不是贴图锚点。
+- `assets/extension/properties/resources.xml` 中三个区块必须分别显式使用 `extension/reanim/weiku_c`、`weiku_b`、`weiku_a` 的 `<SetDefaults ... />`；否则会继承前一 manifest 的 `dependency/sounds/` 默认路径。
+- 配置头文件中的帧数、时间、发射帧和枪口坐标被 C++ 使用；这些项目变化后必须重新构建。为避免漏判，日常采用固定流程：修改 → 运行对应同步脚本 → 构建 → 从正确运行目录启动 → 游戏内人工确认。
+- 直接运行 `build/DebugGOTY_x64/bin/PlantsVsZombies.exe` 时工作目录应为同一个 `bin`，且其中必须有构建复制的依赖资源；桌面快捷方式还必须核对目标 EXE 和“起始位置”。缺少 `dependency.pak` 是运行目录/资源副本问题，不是 `timing.ini` 缓存问题。
+- 本构建是非宽字符版本。不要在卡片名称/提示中直接调用 `WStringToSexyString` 转换中文，否则会在 `Common.cpp` 的 `wcstombs` 断言。当前使用 `LawnStrings.txt` 中的 ASCII 名称 `WEIKU_C`、`WEIKU_B`、`WEIKU_A`；中文显示需另接 Unicode 字体与渲染链。
+- 仅检查进程存活不足以证明启动成功：Fatal Error / assertion 对话框出现时进程可能仍存在。必须进入选卡界面，分别选择、放置并观察 idle、shoot、发射帧、fly 和命中。
+- 高分辨率 PNG 会原样复制，Reanimation 缩放只改变显示尺寸，不降低纹理解码内存。B/C 各 54 帧，A 51 帧；单套实测即可令进程内存超过 1 GB。继续增加植物前应优先做运行贴图降采样、分组加载或纹理压缩。

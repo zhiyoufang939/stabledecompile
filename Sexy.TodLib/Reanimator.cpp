@@ -189,6 +189,8 @@ ReanimationParams gLawnReanimationArray[(int)ReanimationType::NUM_REANIMS] = { /
 	{ ReanimationType::REANIM_WEIKU_C_PROJECTILE,                   "reanim\\WeikuCProjectile.reanim",                 0 },
 	{ ReanimationType::REANIM_WEIKU_B,                              "reanim\\WeikuB.reanim",                           0 },
 	{ ReanimationType::REANIM_WEIKU_B_PROJECTILE,                   "reanim\\WeikuBProjectile.reanim",                 0 },
+	{ ReanimationType::REANIM_WEIKU_A,                              "reanim\\WeikuA.reanim",                           0 },
+	{ ReanimationType::REANIM_WEIKU_A_PROJECTILE,                   "reanim\\WeikuAProjectile.reanim",                 0 },
 };
 
 //0x471540

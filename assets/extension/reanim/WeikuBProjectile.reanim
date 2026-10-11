@@ -14,14 +14,14 @@
 </track>
 <track>
   <name>weiku_b_projectile</name>
-  <t><x>0.0</x><y>-12.5</y><sx>0.1</sx><sy>0.1</sy><i>IMAGE_REANIM_WEIKU_B_FLY_00</i></t>
-  <t><x>0.0</x><y>-12.5</y><sx>0.1</sx><sy>0.1</sy><i>IMAGE_REANIM_WEIKU_B_FLY_01</i></t>
-  <t><x>0.0</x><y>-12.5</y><sx>0.1</sx><sy>0.1</sy><i>IMAGE_REANIM_WEIKU_B_FLY_02</i></t>
-  <t><x>0.0</x><y>-12.5</y><sx>0.1</sx><sy>0.1</sy><i>IMAGE_REANIM_WEIKU_B_FLY_03</i></t>
-  <t><x>0.0</x><y>-12.5</y><sx>0.1</sx><sy>0.1</sy><i>IMAGE_REANIM_WEIKU_B_FLY_04</i></t>
-  <t><x>0.0</x><y>-12.5</y><sx>0.1</sx><sy>0.1</sy><i>IMAGE_REANIM_WEIKU_B_FLY_05</i></t>
-  <t><x>0.0</x><y>-12.5</y><sx>0.1</sx><sy>0.1</sy><i>IMAGE_REANIM_WEIKU_B_FLY_06</i></t>
-  <t><x>0.0</x><y>-12.5</y><sx>0.1</sx><sy>0.1</sy><i>IMAGE_REANIM_WEIKU_B_FLY_07</i></t>
-  <t><x>0.0</x><y>-12.5</y><sx>0.1</sx><sy>0.1</sy><i>IMAGE_REANIM_WEIKU_B_FLY_08</i></t>
-  <t><x>0.0</x><y>-12.5</y><sx>0.1</sx><sy>0.1</sy><i>IMAGE_REANIM_WEIKU_B_FLY_09</i></t>
+  <t><x>0.0</x><y>-12.5</y><sx>0.08</sx><sy>0.08</sy><i>IMAGE_REANIM_WEIKU_B_FLY_00</i></t>
+  <t><x>0.0</x><y>-12.5</y><sx>0.08</sx><sy>0.08</sy><i>IMAGE_REANIM_WEIKU_B_FLY_01</i></t>
+  <t><x>0.0</x><y>-12.5</y><sx>0.08</sx><sy>0.08</sy><i>IMAGE_REANIM_WEIKU_B_FLY_02</i></t>
+  <t><x>0.0</x><y>-12.5</y><sx>0.08</sx><sy>0.08</sy><i>IMAGE_REANIM_WEIKU_B_FLY_03</i></t>
+  <t><x>0.0</x><y>-12.5</y><sx>0.08</sx><sy>0.08</sy><i>IMAGE_REANIM_WEIKU_B_FLY_04</i></t>
+  <t><x>0.0</x><y>-12.5</y><sx>0.08</sx><sy>0.08</sy><i>IMAGE_REANIM_WEIKU_B_FLY_05</i></t>
+  <t><x>0.0</x><y>-12.5</y><sx>0.08</sx><sy>0.08</sy><i>IMAGE_REANIM_WEIKU_B_FLY_06</i></t>
+  <t><x>0.0</x><y>-12.5</y><sx>0.08</sx><sy>0.08</sy><i>IMAGE_REANIM_WEIKU_B_FLY_07</i></t>
+  <t><x>0.0</x><y>-12.5</y><sx>0.08</sx><sy>0.08</sy><i>IMAGE_REANIM_WEIKU_B_FLY_08</i></t>
+  <t><x>0.0</x><y>-12.5</y><sx>0.08</sx><sy>0.08</sy><i>IMAGE_REANIM_WEIKU_B_FLY_09</i></t>
 </track>
